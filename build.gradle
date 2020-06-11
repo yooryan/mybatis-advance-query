@@ -1,0 +1,26 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'com.github'
+version = '1.0.0'
+
+
+sourceCompatibility = 8
+targetCompatibility = 8
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+
+
+repositories {
+    mavenLocal()
+    maven { url 'https://maven.aliyun.com/repository/public' }
+    mavenCentral()
+}
+dependencies {
+    testCompile group: 'junit', name: 'junit', version:'4.11'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version:'1.18.2'
+    compileOnly group: 'org.mybatis', name: 'mybatis', version:'3.5.2'
+    compileOnly group: 'org.slf4j', name: 'slf4j-api', version:'1.7.25'
+}
