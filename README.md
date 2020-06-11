@@ -19,7 +19,7 @@
 ### 1. 引入插件
  添加gradle依赖
 ```xml  
-compile('cn.lvji:mybatis-plugin-advance-query:1.0.0')
+compile('cn.lvji:mybatis-plugin-advance-query:1.0.0-SNAPSHOT')
 ```
 
 ### 2. 配置拦截器插件
