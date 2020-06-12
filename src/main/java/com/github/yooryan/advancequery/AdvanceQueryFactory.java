@@ -43,6 +43,7 @@ public class AdvanceQueryFactory {
                 }
                 try {
                     Class<?> clazz = Class.forName(dialectClazz);
+                    //判断clazz是否继承IDialectAdvanceQuery
                     if (IDialectAdvanceQuery.class.isAssignableFrom(clazz)) {
                         dialectAdvanceQuery = (IDialectAdvanceQuery) clazz.newInstance();
                         DIALECT_CACHE.put(dialectClazz, dialectAdvanceQuery);

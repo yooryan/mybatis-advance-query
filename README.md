@@ -2,11 +2,11 @@
 
 ## 前言
 
- 动态SQL是MyBatis中强大的特性之一。但在许多时候数据查询条件是动态构建的,因此需要在*.xml文件中编写<where>与<if test"condtition"> 条件。
-
- 虽然在MyBatis-plus的强大支持下已经封装了单表情况下的条件查询,但是在多表关联的时候还是需要手动编写各种<where>,<if>条件。这也太烦了,
-
- 为了提升开发效率(更好的偷懒),因此封装了一个小插件。目前只是雏形状态,支持简单的SQL语句构建,后面会持续更新优化。
+ 动态SQL是MyBatis中强大的特性之一。但在许多时候数据查询条件是需要动态构建的,因此需要
+ 
+ 在*.xml文件中拼写许多<where> , <if test "condition">条件。想要成为一名出色程序猿的必要条件就是
+ 
+ 如何提升开发效率(更好的偷懒),因此封装了一个可配置动态查询SQL的小插件。
 
 ## Support
 
@@ -30,7 +30,7 @@ public AdvanceQueryInterceptor advanceQueryInterceptor(){
     return new AdvanceQueryInterceptor();
 }
 ```
- tips:如果已经实现了自定义查询条件逻辑设置`dialectClazz`属性值即可
+如果已经实现了自定义查询条件逻辑设置`dialectClazz`属性值即可
 ```java
 advanceQueryInterceptor.setDialectClazz(dialectClazz);
 ```
@@ -38,8 +38,8 @@ advanceQueryInterceptor.setDialectClazz(dialectClazz);
 ### 3. 如何使用  
 
 ```java
-//只需要在mapper接口参数属性值上加上@AdvanceSqlOp注解
-userMapper.page((@Param("page") Page page, @Param("filter") User filter);
+//在mapper接口定义的条件查询类上的字段配置@AdvanceSqlOp注解
+userMapper.page((@Param("page") Page page, @Param("filter") User user);
 
 public User {
     //EQ即为=
@@ -52,6 +52,7 @@ public User {
 ```
 ##### 例一：
 ```java
+User user = new User();
 user.setName("Jenny");
 user.setAge(18);
 userMapper.page(page,user);
@@ -84,7 +85,7 @@ public @interface AdvanceSqlOp {
     String alias() default "";
 }
 ```
-1.`value`:类型为枚举`SqlKeyWord`,包含一些常见的操作符号=, < , > 等
+1.`value`:类型为枚举`SqlKeyWord`,包含一些常见的操作符号=, < , > ,IN , NOT IN , LIKE , BETWEEN等
 
 2.`camelCaseToUnderscoreMap` : 对属性值进行命名转换,驼峰命名转换为下划线(_)
 
@@ -92,9 +93,9 @@ public @interface AdvanceSqlOp {
 
 **重要提示：**
 
-1.在原始sql上务必返回需要动态构建的条件字段,否则报错
+1.在原始sql上务必返回需要动态构建的条件字段,否则抛出异常(待优化)
 
-2.如果在原始sql中定义了驼峰别名,请设置别名或将默认的命名转换设置为false,否则会出现sql语法报错
+2.如果在原始sql中定义了驼峰别名,请设置别名或将默认的命名转换设置为false,否则抛出sql语法错误异常(待优化)
 
 
 ```
@@ -104,4 +105,4 @@ public @interface AdvanceSqlOp {
 ```
 
 ## 结语
-  目前只处于雏形阶段,并且缺乏测试验证,希望后续能逐渐优化
+  目前只处于雏形阶段,缺乏大量的测试验证,以后多抽点抠脚的时间继续完善
