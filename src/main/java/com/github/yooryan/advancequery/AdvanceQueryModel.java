@@ -1,6 +1,6 @@
-package com.github.advancequery;
+package com.github.yooryan.advancequery;
 
-import com.github.advancequery.toolkit.Assert;
+import com.github.yooryan.advancequery.toolkit.Assert;
 import lombok.Getter;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.session.Configuration;

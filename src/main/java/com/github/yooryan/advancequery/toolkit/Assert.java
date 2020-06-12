@@ -1,6 +1,6 @@
-package com.github.advancequery.toolkit;
+package com.github.yooryan.advancequery.toolkit;
 
-import com.github.advancequery.exception.AdvanceQueryException;
+import com.github.yooryan.advancequery.exception.AdvanceQueryException;
 
 /**
  * @author linyunrui

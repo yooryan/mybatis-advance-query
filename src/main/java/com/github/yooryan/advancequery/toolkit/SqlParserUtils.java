@@ -1,4 +1,4 @@
-package com.github.advancequery.toolkit;
+package com.github.yooryan.advancequery.toolkit;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -1,7 +1,7 @@
-package com.github.advancequery.annotation;
+package com.github.yooryan.advancequery.annotation;
 
 
-import com.github.advancequery.toolkit.StringPool;
+import com.github.yooryan.advancequery.toolkit.StringPool;
 
 /**
  * SQL 保留关键字枚举

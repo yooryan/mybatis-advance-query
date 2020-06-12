@@ -1,4 +1,4 @@
-package com.github.advancequery.toolkit;
+package com.github.yooryan.advancequery.toolkit;
 
 import java.util.Collection;
 

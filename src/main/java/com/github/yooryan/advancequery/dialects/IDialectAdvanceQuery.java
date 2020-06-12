@@ -1,9 +1,9 @@
-package com.github.advancequery.dialects;
+package com.github.yooryan.advancequery.dialects;
 
 
-import com.github.advancequery.AdvanceQuery;
-import com.github.advancequery.AdvanceQueryModel;
-import com.github.advancequery.toolkit.StringPool;
+import com.github.yooryan.advancequery.AdvanceQuery;
+import com.github.yooryan.advancequery.AdvanceQueryModel;
+import com.github.yooryan.advancequery.toolkit.StringPool;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.github.advancequery.annotation;
+package com.github.yooryan.advancequery.annotation;
 
 
 import java.io.Serializable;

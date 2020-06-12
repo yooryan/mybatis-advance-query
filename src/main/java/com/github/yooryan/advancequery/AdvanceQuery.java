@@ -1,4 +1,4 @@
-package com.github.advancequery;
+package com.github.yooryan.advancequery;
 
 import lombok.Data;
 

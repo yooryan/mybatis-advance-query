@@ -1,4 +1,4 @@
-package com.github.advancequery.exception;
+package com.github.yooryan.advancequery.exception;
 
 /**
  * @author linyunrui

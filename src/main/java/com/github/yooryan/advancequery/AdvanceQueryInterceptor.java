@@ -1,11 +1,11 @@
-package com.github.advancequery;
+package com.github.yooryan.advancequery;
 
-import com.github.advancequery.annotation.AdvanceSqlOp;
-import com.github.advancequery.annotation.DbType;
-import com.github.advancequery.annotation.SqlKeyword;
-import com.github.advancequery.toolkit.CollectionUtils;
-import com.github.advancequery.toolkit.SqlParserUtils;
-import com.github.advancequery.toolkit.StringUtil;
+import com.github.yooryan.advancequery.annotation.AdvanceSqlOp;
+import com.github.yooryan.advancequery.annotation.DbType;
+import com.github.yooryan.advancequery.annotation.SqlKeyword;
+import com.github.yooryan.advancequery.toolkit.CollectionUtils;
+import com.github.yooryan.advancequery.toolkit.SqlParserUtils;
+import com.github.yooryan.advancequery.toolkit.StringUtil;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;

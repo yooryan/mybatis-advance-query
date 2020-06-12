@@ -10,7 +10,7 @@
 
 ## Support
 
-默认情况下使用MySQL方言进行查询条件构建,如果想要实现自己的查询逻辑，可以实现 `IDialectAdvanceQuery`(com.github.advancequery.dialects.IDialectAdvanceQuery)
+默认情况下使用MySQL方言进行查询条件构建,如果想要实现自己的查询逻辑，可以实现 `IDialectAdvanceQuery`(com.github.yooryan.advancequery.dialects.IDialectAdvanceQuery)
 
 1. `Mysql`
 

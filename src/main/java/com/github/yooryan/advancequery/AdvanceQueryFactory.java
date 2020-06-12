@@ -1,10 +1,10 @@
-package com.github.advancequery;
+package com.github.yooryan.advancequery;
 
-import com.github.advancequery.annotation.DbType;
-import com.github.advancequery.dialects.IDialectAdvanceQuery;
-import com.github.advancequery.dialects.MySqlDialectAdvanceQuery;
-import com.github.advancequery.exception.AdvanceQueryException;
-import com.github.advancequery.toolkit.StringUtil;
+import com.github.yooryan.advancequery.annotation.DbType;
+import com.github.yooryan.advancequery.dialects.IDialectAdvanceQuery;
+import com.github.yooryan.advancequery.dialects.MySqlDialectAdvanceQuery;
+import com.github.yooryan.advancequery.exception.AdvanceQueryException;
+import com.github.yooryan.advancequery.toolkit.StringUtil;
 
 import java.util.List;
 import java.util.Map;
