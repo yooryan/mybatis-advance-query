@@ -1,8 +1,15 @@
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'idea'
+apply plugin: 'signing'
 
-group = 'com.github'
-version = '1.0.0-SNAPSHOT'
+signing {
+    sign configurations.archives
+}
+
+group = 'com.github.yooryan'
+version = '1.0.0'
+def artifactId = 'mybatis-advance-query'
 
 sourceCompatibility = 8
 targetCompatibility = 8
@@ -26,3 +33,23 @@ dependencies {
 }
 
 
+//上传到nexus
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: "${username}", password: "${password}")
+            }
+
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: "${username}", password: "${password}")
+            }
+
+            pom.groupId = "$project.group"
+            pom.artifactId = "$rootProject.name"
+            pom.version = "$project.version"
+        }
+
+    }
+}
