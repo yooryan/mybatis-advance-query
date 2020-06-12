@@ -8,7 +8,7 @@ signing {
 }
 
 group = 'com.github.yooryan'
-version = '1.0.0'
+version = '1.0.1'
 def artifactId = 'mybatis-advance-query'
 
 sourceCompatibility = 8
@@ -32,23 +32,44 @@ dependencies {
     compileOnly group: 'org.slf4j', name: 'slf4j-api', version:'1.7.25'
 }
 
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier = 'sources'
+}
 
-//上传到nexus
+task javadocJar(type: Jar) {
+    from javadoc
+    classifier = 'javadoc'
+}
+
 uploadArchives {
     repositories {
         mavenDeployer {
+            beforeDeployment {
+                MavenDeployment deployment -> signing.signPom(deployment)
+            }
+
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
                 authentication(userName: "${username}", password: "${password}")
             }
-
 
             snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
                 authentication(userName: "${username}", password: "${password}")
             }
 
-            pom.groupId = "$project.group"
-            pom.artifactId = "$rootProject.name"
-            pom.version = "$project.version"
+            pom.project {
+                name "${artifactId}"
+                description 'This is a MyBaits plug-in that provides automatic build of advanced query.'
+                packaging 'jar'
+                url 'https://github.com/yooryan/mybatis-advance-query'
+
+                scm {
+                    connection 'scm:git:https://github.com/yooryan/mybatis-advance-query.git'
+                    developerConnection 'scm:git:https://github.com/yooryan/mybatis-advance-query.git'
+                    url 'https://github.com/yooryan/mybatis-advance-query.git'
+                }
+
+            }
         }
 
     }
