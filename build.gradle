@@ -52,6 +52,10 @@ allprojects {
         compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
     }
 
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
 
     uploadArchives {
         repositories {
@@ -59,6 +63,7 @@ allprojects {
                 beforeDeployment {
                     MavenDeployment deployment -> signing.signPom(deployment)
                 }
+
 
                 repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
                     authentication(userName: "${username}", password: "${password}")
@@ -70,10 +75,13 @@ allprojects {
 
 
                 pom.project {
+
                     name = "mybatis-advance-query"
                     description 'This is a MyBaits plug-in that provides automatic build of advanced query.'
                     packaging 'jar'
                     url 'https://github.com/yooryan/mybatis-advance-query'
+
+
 
                     scm {
                         connection 'scm:git:https://github.com/yooryan/mybatis-advance-query.git'

@@ -19,7 +19,7 @@
 ### 1. 引入插件
  添加gradle依赖
 ```xml  
-compile('com.github.yooryan:mybatis-advance-query:1.0.0-SNAPSHOT')
+compile('com.github.yooryan:mybatis-advance-query:1.0.0')
 ```
 
 ### 2. 配置拦截器插件
@@ -39,7 +39,7 @@ advanceQueryInterceptor.setDialectClazz(dialectClazz);
 
 ```java
 //在mapper接口定义的条件查询类上的字段配置@AdvanceSqlOp注解
-userMapper.page((@Param("page") Page page, @Param("filter") User user);
+userMapper.selectUser(User user);
 
 public User {
     //EQ即为=
@@ -55,7 +55,7 @@ public User {
 User user = new User();
 user.setName("Jenny");
 user.setAge(18);
-userMapper.page(page,user);
+userMapper.selectUser(user);
 ```
 
 ```sql
