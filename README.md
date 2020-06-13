@@ -41,6 +41,7 @@ advanceQueryInterceptor.setDialectClazz(dialectClazz);
 //在mapper接口定义的条件查询类上的字段配置@AdvanceSqlOp注解
 userMapper.selectUser(User user);
 
+
 public User {
     //EQ即为=
     @AdvanceSqlOp(SqlKeyword.EQ)
