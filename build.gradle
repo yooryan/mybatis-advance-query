@@ -1,76 +1,105 @@
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'idea'
-apply plugin: 'signing'
 
-signing {
-    sign configurations.archives
-}
+allprojects {
 
-group = 'com.github.yooryan'
-version = '1.0.1'
-def artifactId = 'mybatis-advance-query'
+    group = 'com.github.yooryan'
+    version = '1.0.0'
 
-sourceCompatibility = 8
-targetCompatibility = 8
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'idea'
+    apply plugin: 'signing'
 
+    signing {
+        sign configurations.archives
+    }
 
+    sourceCompatibility = 8
+    targetCompatibility = 8
 
-repositories {
-    mavenLocal()
-    maven { url 'https://maven.aliyun.com/repository/public' }
-    mavenCentral()
-}
-dependencies {
-    testCompile group: 'junit', name: 'junit', version:'4.11'
-    compileOnly group: 'org.projectlombok', name: 'lombok', version:'1.18.2'
-    annotationProcessor 'org.projectlombok:lombok:1.18.2'
-    compileOnly group: 'org.mybatis', name: 'mybatis', version:'3.5.2'
-    compileOnly group: 'org.slf4j', name: 'slf4j-api', version:'1.7.25'
-}
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
 
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allJava
-    classifier = 'sources'
-}
+    task sourcesJar(type: Jar) {
+        archiveClassifier = 'sources'
+        from sourceSets.main.allSource
+    }
 
-task javadocJar(type: Jar) {
-    from javadoc
-    classifier = 'javadoc'
-}
+    task javadocJar(type: Jar) {
+        archiveClassifier = 'javadoc'
+        from javadoc
+    }
 
-uploadArchives {
+    javadoc {
+        options {
+            encoding "UTF-8"
+            charSet 'UTF-8'
+            author true
+            version true
+        }
+    }
+
     repositories {
-        mavenDeployer {
-            beforeDeployment {
-                MavenDeployment deployment -> signing.signPom(deployment)
-            }
+        mavenLocal()
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        mavenCentral()
+    }
+    dependencies {
+        testCompile group: 'junit', name: 'junit', version: '4.11'
+        compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.2'
+        annotationProcessor 'org.projectlombok:lombok:1.18.2'
+        compileOnly group: 'org.mybatis', name: 'mybatis', version: '3.5.2'
+        compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    }
 
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: "${username}", password: "${password}")
-            }
 
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: "${username}", password: "${password}")
-            }
-
-            pom.project {
-                name "${artifactId}"
-                description 'This is a MyBaits plug-in that provides automatic build of advanced query.'
-                packaging 'jar'
-                url 'https://github.com/yooryan/mybatis-advance-query'
-
-                scm {
-                    connection 'scm:git:https://github.com/yooryan/mybatis-advance-query.git'
-                    developerConnection 'scm:git:https://github.com/yooryan/mybatis-advance-query.git'
-                    url 'https://github.com/yooryan/mybatis-advance-query.git'
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment {
+                    MavenDeployment deployment -> signing.signPom(deployment)
                 }
 
-            }
-        }
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: "${username}", password: "${password}")
+                }
 
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: "${username}", password: "${password}")
+                }
+
+
+                pom.project {
+                    name = "mybatis-advance-query"
+                    description 'This is a MyBaits plug-in that provides automatic build of advanced query.'
+                    packaging 'jar'
+                    url 'https://github.com/yooryan/mybatis-advance-query'
+
+                    scm {
+                        connection 'scm:git:https://github.com/yooryan/mybatis-advance-query.git'
+                        developerConnection 'scm:git:https://github.com/yooryan/mybatis-advance-query.git'
+                        url 'https://github.com/yooryan/mybatis-advance-query.git'
+                    }
+
+                    licenses {
+                        license {
+                            name = 'The MIT License (MIT)'
+                            url = 'https://www.mit-license.org/'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'yooryan'
+                            name = 'lin'
+                            email = '404624531@qq.com'
+                        }
+                    }
+                }
+
+
+            }
+
+        }
     }
 }

@@ -43,7 +43,6 @@ public class AdvanceQueryInterceptor implements Interceptor {
      */
     private String dialectType;
     /**
-     * 方言实现类<br>
      * 需实现 IDialectAdvanceQuery 接口的子类
      */
     private String dialectClazz;

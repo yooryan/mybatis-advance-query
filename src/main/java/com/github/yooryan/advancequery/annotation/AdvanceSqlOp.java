@@ -25,7 +25,8 @@ public @interface AdvanceSqlOp {
     boolean camelCaseToUnderscoreMap() default true;
 
     /**
-     *设定别名
+     * 设定别名
+     * @return 默认为""
      */
     String alias() default "";
 }

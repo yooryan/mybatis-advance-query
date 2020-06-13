@@ -54,31 +54,25 @@ public class AdvanceQueryModel {
         }
 
         /**
-         * 设置消费 List<ParameterMapping> 的方式
-         * <p>不带下标的</p>
          *
          * @return this
          */
-        public AdvanceQueryModel setConsumer(boolean isFirstParam) {
-            if (isFirstParam) {
-                this.paramNameConsumer = j -> {
-                    for (int i = 0; i < consumerCount; i++) {
-                        j.add(new ParameterMapping.Builder(configuration,paramNames.get(i), Object.class).build());
-                    }
-                };
-            }
+        public AdvanceQueryModel setConsumer() {
+            this.paramNameConsumer = j -> {
+                for (int i = 0; i < consumerCount; i++) {
+                    j.add(new ParameterMapping.Builder(configuration,paramNames.get(i), Object.class).build());
+                }
+            };
             this.setParamMapConsumer();
             return this;
         }
 
         /**
-         * 设置消费 List<ParameterMapping> 的方式
-         * <p>不带下标的,两个值都有</p>
          *
          * @return this
          */
         public AdvanceQueryModel setConsumerChain() {
-            return setConsumer(true);
+            return setConsumer();
         }
 
         /**
