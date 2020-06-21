@@ -24,4 +24,9 @@ public class AdvanceQuery {
      * 查询值
      */
     private List<Object> value;
+
+    /**
+     * 前置表名
+     */
+    private String tableAlias;
 }

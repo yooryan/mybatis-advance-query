@@ -3,6 +3,7 @@ package com.github.yooryan.advancequery;
 import com.github.yooryan.advancequery.annotation.AdvanceSqlOp;
 import com.github.yooryan.advancequery.annotation.DbType;
 import com.github.yooryan.advancequery.annotation.SqlKeyword;
+import com.github.yooryan.advancequery.exception.SqlAutomaticBuildException;
 import com.github.yooryan.advancequery.toolkit.CollectionUtils;
 import com.github.yooryan.advancequery.toolkit.SqlParserUtils;
 import com.github.yooryan.advancequery.toolkit.StringUtil;
@@ -72,31 +73,39 @@ public class AdvanceQueryInterceptor implements Interceptor {
             }
         }
 
+        //不需要自动构建查询sql
+        if (query == null){
+            invocation.proceed();
+        }
+
         String originalSql = boundSql.getSql();
         //默认先给mysql吧
         DbType dbType = StringUtil.isNotEmpty(dialectType) ? DbType.getDbType(dialectType)
                 : DbType.MYSQL;
 
         //存在查询对象
-        if (query != null){
-            List<AdvanceQuery> advanceQuery = createAdvanceQuery(query);
-            if (log.isDebugEnabled()) {
-                log.debug("AdvanceQueryInterceptor sql=" + originalSql);
+        List<AdvanceQuery> advanceQuery = createAdvanceQuery(query);
+        if (log.isDebugEnabled()) {
+            log.debug("AdvanceQueryInterceptor sql=" + originalSql);
+        }
+        if (!CollectionUtils.isEmpty(advanceQuery)){
+          //  String tempSql = SqlParserUtils.getOriginalAdvanceQuerySql(originalSql,sqlOptimize);
+            MappedStatement newMs = copyMappedStatement(mappedStatement, new AdvanceQuerySqlSource(boundSql));
+            MetaObject msObject =  MetaObject.forObject(newMs, new DefaultObjectFactory(), new DefaultObjectWrapperFactory(),new DefaultReflectorFactory());
+            Map<String, Object> additionalParameters = (Map<String, Object>) msObject.getValue("sqlSource.boundSql.additionalParameters");
+            AdvanceQueryModel model;
+            try {
+                model = AdvanceQueryFactory.buildAdvanceQuerySql(advanceQuery,originalSql, dbType, dialectClazz);
+            } catch (SqlAutomaticBuildException e) {
+                //构建sql失败
+                return invocation.proceed();
             }
-            if (!CollectionUtils.isEmpty(advanceQuery)){
-                String tempSql = SqlParserUtils.getOriginalAdvanceQuerySql(originalSql);
-                MappedStatement newMs = copyMappedStatement(mappedStatement, new AdvanceQuerySqlSource(boundSql));
-                MetaObject msObject =  MetaObject.forObject(newMs, new DefaultObjectFactory(), new DefaultObjectWrapperFactory(),new DefaultReflectorFactory());
-                Map<String, Object> additionalParameters = (Map<String, Object>) msObject.getValue("sqlSource.boundSql.additionalParameters");
-                AdvanceQueryModel model = AdvanceQueryFactory.buildAdvanceQuerySql(advanceQuery,tempSql, dbType, dialectClazz);
-                Configuration configuration = mappedStatement.getConfiguration();
-                List<ParameterMapping> mappings = new ArrayList<>(boundSql.getParameterMappings());
-                model.consumers(mappings,configuration,additionalParameters);
-                msObject.setValue("sqlSource.boundSql.sql", model.getDialectSql());
-                msObject.setValue("sqlSource.boundSql.parameterMappings", mappings);
-                invocation.getArgs()[0] = newMs;
-            }
-
+            Configuration configuration = mappedStatement.getConfiguration();
+            List<ParameterMapping> mappings = new ArrayList<>(boundSql.getParameterMappings());
+            model.consumers(mappings,configuration,additionalParameters);
+            msObject.setValue("sqlSource.boundSql.sql", model.getDialectSql());
+            msObject.setValue("sqlSource.boundSql.parameterMappings", mappings);
+            invocation.getArgs()[0] = newMs;
         }
         return invocation.proceed();
     }
@@ -121,6 +130,10 @@ public class AdvanceQueryInterceptor implements Interceptor {
                     }
                 }else {
                     name = annotation.alias();
+                }
+                //是否设置字段前置表名
+                if (!StringUtil.isEmpty(annotation.tableAlias())){
+                    advanceQuery.setTableAlias(annotation.tableAlias() + ".");
                 }
 
                 SqlKeyword op = annotation.value();
