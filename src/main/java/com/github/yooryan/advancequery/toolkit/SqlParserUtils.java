@@ -1,5 +1,6 @@
 package com.github.yooryan.advancequery.toolkit;
 
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,15 +9,6 @@ import java.util.regex.Pattern;
  */
 public class SqlParserUtils {
 
-    /**
-     * 获取高级查询sql包装
-     *
-     * @param originalSql ignore
-     * @return ignore
-     */
-    public static String getOriginalAdvanceQuerySql(String originalSql) {
-        return String.format("SELECT * FROM ( %s ) temp", originalSql);
-    }
 
     /**
      * 驼峰命名转换下划线

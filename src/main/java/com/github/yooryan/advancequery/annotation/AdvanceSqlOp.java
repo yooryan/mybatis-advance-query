@@ -25,8 +25,14 @@ public @interface AdvanceSqlOp {
     boolean camelCaseToUnderscoreMap() default true;
 
     /**
-     * 设定别名
+     * 设定别名,按指定名称构建搜索字段
      * @return 默认为""
      */
     String alias() default "";
+
+    /**
+     * 该字段的前置表别名(多表的列字段存在冲突时使用)
+     * @return 默认""
+     */
+    String tableAlias() default "";
 }
