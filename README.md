@@ -84,6 +84,13 @@ public @interface AdvanceSqlOp {
      *设定别名
      */
     String alias() default "";
+    
+    /**
+     * 该字段的前置表别名(多表的列字段存在冲突时使用)
+     * @return 默认""
+     */
+    String tableAlias() default "";
+
 }
 ```
 1.`value`:类型为枚举`SqlKeyWord`,包含一些常见的操作符号=, < , > ,IN , NOT IN , LIKE , BETWEEN等
