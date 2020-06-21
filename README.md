@@ -19,7 +19,7 @@
 ### 1. 引入插件
  添加gradle依赖
 ```xml  
-compile('com.github.yooryan:mybatis-advance-query:1.0.0')
+compile('com.github.yooryan:mybatis-advance-query:${version}')
 ```
 
 ### 2. 配置拦截器插件
@@ -111,7 +111,7 @@ public @interface AdvanceSqlOp {
 
 # CHANGELOG
 
-## [v1.0.5] 2020.6.21
+## [v1.1.0] 2020.6.21
 - 优化条件查询构建逻辑,去除使用临时表构建
 - @AdvanceSqlOp新增tableAlias字段
 
