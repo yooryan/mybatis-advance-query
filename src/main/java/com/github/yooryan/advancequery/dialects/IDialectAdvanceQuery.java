@@ -25,7 +25,7 @@ public interface IDialectAdvanceQuery {
     /**
      * and
      */
-    String AND = StringPool.AND;
+    String AND = " and ";
     /**
      * ?
      */
