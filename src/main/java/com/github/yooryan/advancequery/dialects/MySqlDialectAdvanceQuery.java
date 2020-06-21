@@ -88,7 +88,13 @@ public class MySqlDialectAdvanceQuery implements IDialectAdvanceQuery {
                 }
             }
             Expression originalWhere = plainSelect.getWhere();
-            plainSelect.setWhere(CCJSqlParserUtil.parseCondExpression(originalWhere + sb.toString()));
+            String sqlFragment;
+            if (originalWhere == null){
+                sqlFragment = sb.toString().replaceFirst(AND,"");
+            }else {
+                sqlFragment = sb.insert(0,originalWhere).toString();
+            }
+            plainSelect.setWhere(CCJSqlParserUtil.parseCondExpression(sqlFragment));
             return selectStatement.toString();
         } catch (Throwable e) {
            //抛出任何异常则不作处理
