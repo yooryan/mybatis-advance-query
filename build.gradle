@@ -2,7 +2,7 @@
 allprojects {
 
     group = 'com.github.yooryan'
-    version = '1.2.0-SNAPSHOTS'
+    version = '1.2.0'
 
     apply plugin: 'java'
     apply plugin: 'maven'
