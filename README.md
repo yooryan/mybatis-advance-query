@@ -111,6 +111,10 @@ public @interface AdvanceSqlOp {
 
 # CHANGELOG
 
+## [v1.2.0] 2020.6.29
+- 优化多拦截器时的兼容问题
+
+
 ## [v1.1.0] 2020.6.21
 - 优化条件查询构建逻辑,去除使用临时表构建
 - @AdvanceSqlOp新增tableAlias字段
