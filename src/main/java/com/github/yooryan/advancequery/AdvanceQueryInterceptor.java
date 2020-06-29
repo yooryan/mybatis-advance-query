@@ -10,6 +10,7 @@ import com.github.yooryan.advancequery.toolkit.StringUtil;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -32,10 +33,13 @@ import java.util.*;
  */
 @Setter
 @Accessors(chain = true)
-@Intercepts({@Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class }) })
+@Intercepts({
+        @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class }),
+        @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class})
+})
 @Slf4j
 public class AdvanceQueryInterceptor implements Interceptor {
-
+    protected Object advanceQueryCache = null;
     /**
      * 方言类型
      */
@@ -48,23 +52,47 @@ public class AdvanceQueryInterceptor implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
-        MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
-        Object parameter = invocation.getArgs()[1];
+        Object[] args = invocation.getArgs();
+        MappedStatement mappedStatement = (MappedStatement) args[0];
+        Object parameter = args[1];
+        RowBounds rowBounds = (RowBounds) args[2];
+        ResultHandler resultHandler = (ResultHandler) args[3];
+        Executor executor = (Executor) invocation.getTarget();
+        CacheKey cacheKey;
+        BoundSql boundSql;
+        //由于逻辑关系，只会进入一次
+        if(args.length == 4){
+            //4 个参数时
+            boundSql = mappedStatement.getBoundSql(parameter);
+            cacheKey = executor.createCacheKey(mappedStatement, parameter, rowBounds, boundSql);
+        } else {
+            //6 个参数时
+            cacheKey = (CacheKey) args[4];
+            boundSql = (BoundSql) args[5];
+        }
+
 
         //获取原始sql,获取方法参数
-        BoundSql boundSql = mappedStatement.getBoundSql(parameter);
         Object paramObj = boundSql.getParameterObject();
 
         //判断参数中是否存在AdvanceSqlOp注解
         Object query = null;
-        if (paramObj instanceof Map){
-            for (Object value : ((Map) paramObj).values()) {
+        if (paramObj != null){
+            //缓存对象兼用其他拦截器
+            Collection values;
+            if (paramObj instanceof Map){
+                values = ((Map) paramObj).values();
+            }else {
+                values = Collections.singleton(paramObj);
+            }
+            for (Object value : values) {
                 Class<?> aClass = value.getClass();
                 Field[] declaredFields = aClass.getDeclaredFields();
                 for (Field declaredField : declaredFields) {
                     AdvanceSqlOp annotation = declaredField.getAnnotation(AdvanceSqlOp.class);
                     if (null != annotation){
                         query = value;
+                        advanceQueryCache = value;
                     }
                 }
             }
@@ -72,9 +100,11 @@ public class AdvanceQueryInterceptor implements Interceptor {
 
         //不需要自动构建查询sql
         if (query == null){
-            invocation.proceed();
+            if (advanceQueryCache == null){
+                return invocation.proceed();
+            }
+            query = advanceQueryCache;
         }
-
         String originalSql = boundSql.getSql();
         //默认先给mysql吧
         DbType dbType = StringUtil.isNotEmpty(dialectType) ? DbType.getDbType(dialectType)
@@ -87,8 +117,8 @@ public class AdvanceQueryInterceptor implements Interceptor {
         }
         if (!CollectionUtils.isEmpty(advanceQuery)){
           //  String tempSql = SqlParserUtils.getOriginalAdvanceQuerySql(originalSql,sqlOptimize);
-            MappedStatement newMs = copyMappedStatement(mappedStatement, new AdvanceQuerySqlSource(boundSql));
-            MetaObject msObject =  MetaObject.forObject(newMs, new DefaultObjectFactory(), new DefaultObjectWrapperFactory(),new DefaultReflectorFactory());
+            mappedStatement = copyMappedStatement(mappedStatement, new AdvanceQuerySqlSource(boundSql));
+            MetaObject msObject =  MetaObject.forObject(mappedStatement, new DefaultObjectFactory(), new DefaultObjectWrapperFactory(),new DefaultReflectorFactory());
             Map<String, Object> additionalParameters = (Map<String, Object>) msObject.getValue("sqlSource.boundSql.additionalParameters");
             AdvanceQueryModel model;
             try {
@@ -102,9 +132,9 @@ public class AdvanceQueryInterceptor implements Interceptor {
             model.consumers(mappings,configuration,additionalParameters);
             msObject.setValue("sqlSource.boundSql.sql", model.getDialectSql());
             msObject.setValue("sqlSource.boundSql.parameterMappings", mappings);
-            invocation.getArgs()[0] = newMs;
+            invocation.getArgs()[0] = mappedStatement;
         }
-        return invocation.proceed();
+        return executor.query(mappedStatement, parameter, rowBounds, resultHandler, cacheKey, boundSql);
     }
 
     /**
