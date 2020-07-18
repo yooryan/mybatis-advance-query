@@ -19,10 +19,6 @@ public interface IDialectAdvanceQuery {
      */
     String TAB = StringPool.TAB;
     /**
-     * 变量别名
-     */
-    String ALIAS_TEMP = "temp.";
-    /**
      * and
      */
     String AND = " and ";
