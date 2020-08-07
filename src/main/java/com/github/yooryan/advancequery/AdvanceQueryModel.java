@@ -1,5 +1,6 @@
 package com.github.yooryan.advancequery;
 
+import com.github.yooryan.advancequery.annotation.SqlKeyword;
 import com.github.yooryan.advancequery.toolkit.Assert;
 import lombok.Getter;
 import org.apache.ibatis.mapping.ParameterMapping;
@@ -16,17 +17,18 @@ public class AdvanceQueryModel {
         /**
          * 参数名称
          */
-        private List<String> paramNames;
+        private final List<String> paramNames;
         /**
          * 参数值
          */
-        private List<Object> params;
+        private final List<Object> params;
+
         /**
          * 消费次数
          */
         private final int consumerCount;
         /**
-         * 分页方言 sql
+         * 方言 sql
          */
         @Getter
         private final String dialectSql;
@@ -59,8 +61,30 @@ public class AdvanceQueryModel {
          */
         public AdvanceQueryModel setConsumer() {
             this.paramNameConsumer = j -> {
-                for (int i = 0; i < consumerCount; i++) {
-                    j.add(new ParameterMapping.Builder(configuration,paramNames.get(i), Object.class).build());
+                boolean isPostGrammar = false;
+                int argsOfPostGrammar = 0;
+                //判断原始sql是否包含后置语法
+                if (dialectSql.contains(SqlKeyword.LIMIT.getSqlSegment())) {
+                    isPostGrammar = true;
+                    int lastIndexOf = dialectSql.lastIndexOf("LIMIT");
+                    String substring = dialectSql.substring(lastIndexOf);
+                    for (int i = 0; i < substring.length(); i++) {
+                        char charAt = substring.charAt(i);
+                        if ('?' == charAt){
+                            argsOfPostGrammar ++;
+                        }
+                    }
+                }
+                if (isPostGrammar){
+                    int startIndex = j.size() - argsOfPostGrammar;
+                    for (int i = 0; i < consumerCount; i++) {
+                        j.add(startIndex,new ParameterMapping.Builder(configuration,paramNames.get(i), Object.class).build());
+                        startIndex++;
+                    }
+                }else {
+                    for (int i = 0; i < consumerCount; i++) {
+                        j.add(new ParameterMapping.Builder(configuration,paramNames.get(i), Object.class).build());
+                    }
                 }
             };
             this.setParamMapConsumer();

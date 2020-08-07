@@ -23,6 +23,7 @@ public enum SqlKeyword implements ISqlSegment {
     IS_NULL("IS NULL"),
     IS_NOT_NULL("IS NOT NULL"),
     GROUP_BY("GROUP BY"),
+    LIMIT("LIMIT"),
     HAVING("HAVING"),
     ORDER_BY("ORDER BY"),
     EXISTS("EXISTS"),

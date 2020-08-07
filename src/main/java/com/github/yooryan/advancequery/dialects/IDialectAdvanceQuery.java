@@ -3,6 +3,7 @@ package com.github.yooryan.advancequery.dialects;
 
 import com.github.yooryan.advancequery.AdvanceQuery;
 import com.github.yooryan.advancequery.AdvanceQueryModel;
+import com.github.yooryan.advancequery.annotation.SqlKeyword;
 import com.github.yooryan.advancequery.exception.AdvanceQueryException;
 import com.github.yooryan.advancequery.exception.SqlAutomaticBuildException;
 import com.github.yooryan.advancequery.toolkit.StringPool;

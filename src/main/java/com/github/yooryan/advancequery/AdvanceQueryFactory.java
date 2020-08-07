@@ -22,7 +22,6 @@ public class AdvanceQueryFactory {
     private static final Map<String, IDialectAdvanceQuery> DIALECT_CACHE = new ConcurrentHashMap<>();
 
     public static AdvanceQueryModel buildAdvanceQuerySql(List<AdvanceQuery> advanceQueries, String buildSql, DbType dbType, String dialectClazz) throws SqlAutomaticBuildException {
-        // fix #196
         return getDialect(dbType, dialectClazz).buildAdvanceQuerySql(advanceQueries,buildSql);
     }
 
