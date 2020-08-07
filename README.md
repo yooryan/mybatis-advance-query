@@ -112,6 +112,9 @@ public @interface AdvanceSqlOp {
 # CHANGELOG
 
 ## [v1.2.0] 2020.6.29
+- 兼容pagehelper插件
+
+## [v1.2.0] 2020.6.29
 - 优化多拦截器时的兼容问题
 
 
