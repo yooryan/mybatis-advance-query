@@ -111,7 +111,7 @@ public @interface AdvanceSqlOp {
 
 # CHANGELOG
 
-## [v1.2.0] 2020.8.7
+## [v1.2.2] 2020.8.7
 - 兼容pagehelper插件
 
 ## [v1.2.0] 2020.6.29
