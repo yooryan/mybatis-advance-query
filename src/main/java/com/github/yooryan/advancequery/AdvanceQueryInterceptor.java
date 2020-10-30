@@ -39,7 +39,6 @@ import java.util.*;
 })
 @Slf4j
 public class AdvanceQueryInterceptor implements Interceptor {
-    protected Object advanceQueryCache = null;
     /**
      * 方言类型
      */
@@ -92,7 +91,6 @@ public class AdvanceQueryInterceptor implements Interceptor {
                     AdvanceSqlOp annotation = declaredField.getAnnotation(AdvanceSqlOp.class);
                     if (null != annotation){
                         query = value;
-                        advanceQueryCache = value;
                     }
                 }
             }
@@ -100,10 +98,7 @@ public class AdvanceQueryInterceptor implements Interceptor {
 
         //不需要自动构建查询sql
         if (query == null){
-            if (advanceQueryCache == null){
-                return invocation.proceed();
-            }
-            query = advanceQueryCache;
+            return invocation.proceed();
         }
         String originalSql = boundSql.getSql();
         //默认先给mysql吧
