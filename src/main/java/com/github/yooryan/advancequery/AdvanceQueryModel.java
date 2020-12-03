@@ -115,6 +115,7 @@ public class AdvanceQueryModel {
      * 设置消费 Map<String, Object> 的方式
      */
     private void setParamMapConsumer() {
+        System.out.println("!");
         this.paramMapConsumer = j -> {
             for (int i = 0; i < consumerCount; i++) {
                 j.put(paramNames.get(i), params.get(i));
