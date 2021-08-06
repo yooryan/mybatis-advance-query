@@ -1,6 +1,6 @@
 package com.github.yooryan.advancequery.dialects;
 
-import lombok.Getter;
+import net.sf.jsqlparser.statement.select.Select;
 
 /**
  * 判断后置语法适配器
@@ -14,5 +14,5 @@ public interface IPostGrammarAdapter {
      * @param dialectSql 方言sql
      * @return 参数数量
      */
-    int getNumberOfPostParameters(final String dialectSql);
+    int getNumberOfPostParameters(final Select dialectSql);
 }

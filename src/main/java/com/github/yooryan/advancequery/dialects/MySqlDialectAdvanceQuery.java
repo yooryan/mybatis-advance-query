@@ -39,11 +39,11 @@ public class MySqlDialectAdvanceQuery implements IDialectAdvanceQuery {
         }
 
         //sql拼接
-        String advanceSql = createKeyOpValueSql(advanceQueries,originalSql);
-        return new AdvanceQueryModel(advanceSql, paramName, paramValue).setConsumerChain();
+        Select advanceSelect = createKeyOpValueSql(advanceQueries,originalSql);
+        return new AdvanceQueryModel(advanceSelect, paramName, paramValue).setConsumerChain();
     }
 
-    private String createKeyOpValueSql(List<AdvanceQuery> advanceQueries,String originalSql) throws SqlAutomaticBuildException  {
+    private Select createKeyOpValueSql(List<AdvanceQuery> advanceQueries,String originalSql) throws SqlAutomaticBuildException  {
 
         try {
             Select selectStatement = (Select) CCJSqlParserUtil.parse(originalSql);
@@ -93,7 +93,7 @@ public class MySqlDialectAdvanceQuery implements IDialectAdvanceQuery {
                 sqlFragment = sb.insert(0,originalWhere).toString();
             }
             plainSelect.setWhere(CCJSqlParserUtil.parseCondExpression(sqlFragment));
-            return selectStatement.toString();
+            return selectStatement;
         } catch (Throwable e) {
            //抛出任何异常则不作处理
             throw new SqlAutomaticBuildException("Automatic build SQL failed");

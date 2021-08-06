@@ -6,6 +6,7 @@ import com.github.yooryan.advancequery.dialects.MySqlPostGrammarAdapter;
 import com.github.yooryan.advancequery.toolkit.Assert;
 import lombok.Getter;
 import lombok.Setter;
+import net.sf.jsqlparser.statement.select.Select;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.session.Configuration;
 
@@ -34,7 +35,7 @@ public class AdvanceQueryModel {
      * 方言 sql
      */
     @Getter
-    private final String dialectSql;
+    private final Select dialectSql;
     /**
      * 提供 Configuration
      */
@@ -56,7 +57,7 @@ public class AdvanceQueryModel {
     private IPostGrammarAdapter postGrammarAdapter;
 
 
-    public AdvanceQueryModel(String dialectSql, List<String> paramNames, List<Object> params) {
+    public AdvanceQueryModel(Select dialectSql, List<String> paramNames, List<Object> params) {
         this.dialectSql = dialectSql;
         this.paramNames = paramNames;
         this.params = params;
@@ -115,7 +116,6 @@ public class AdvanceQueryModel {
      * 设置消费 Map<String, Object> 的方式
      */
     private void setParamMapConsumer() {
-        System.out.println("!");
         this.paramMapConsumer = j -> {
             for (int i = 0; i < consumerCount; i++) {
                 j.put(paramNames.get(i), params.get(i));
