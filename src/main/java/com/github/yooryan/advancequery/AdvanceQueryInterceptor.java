@@ -77,7 +77,7 @@ public class AdvanceQueryInterceptor implements Interceptor {
         //判断参数中是否存在AdvanceSqlOp注解
         Object query = null;
         if (paramObj != null){
-            //缓存对象兼用其他拦截器
+            //缓存对象兼容其他拦截器
             Collection values;
             if (paramObj instanceof Map){
                 values = ((Map) paramObj).values();
